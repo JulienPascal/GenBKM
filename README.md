@@ -10,7 +10,7 @@ https://github.com/JulienPascal/GenBKM/blob/master/GenBKM.ipynb
 
 ### Preview
 
-![svg](https://github.com/JulienPascal/GenBKM/blob/master/GenBKM_11_0.svg)
+![alt text](https://github.com/JulienPascal/GenBKM/blob/master/GenBKM_files/GenBKM_11_0.png)
 
 ## References
 

@@ -16,14 +16,14 @@ In this short blog post, I would like to present a small modification of the BKM
 
 It is common to use Bellman's principle of optimality to characterize solutions of a mutli-stage decision process. The principle of optimality leads to a solution in a **recursive form** $d_{t} = d(S_{t})$, where $S_t$ is a vector of state variables and d(.) a policy function describing the optimal action of a decision-maker when faced with any given state. In model with heterogeneous agents (HA) and aggregate uncertainty, $S_t$ is generally infinite-dimensional. Hence, there is a huge premium in avoiding the recursive form.
 
-The **sequence form** of the problem is as follows: at each step in time, a decision-maker observes a new realization of a random process $z_t$ and taking into account the full history of past shocks, the agent make a new choice to maximize her expected discounted sum of returns: $d_t = d(z_t, z_{t-1}, z_{t-2}, ...)$.
+The **sequence form** of the problem is as follows: at each step in time, a decision-maker observes a new realization of a random process $z_t$ and taking into account the full history of past shocks, the agent make a new choice to maximize her expected discounted sum of returns: $d_t = d(z_t, z_{t-1}, z_{t-2}, ...)$. 
 
 The BKM algorithm makes the **assumption** of **linearity** of d(.) with respect to the **aggregate state** $z_t$:
 
-$$ d_t = z_t d(1, 0, 0, ...) + z_{t-1}d(0, 1, 0, ...) + z_{t-2}d(0, 0, 1, ...) + ... $$
+$$ d_t = z_t d(1, 0, 0, ...) + z_{t-1}d(0, 1, 0, ...) + z_{t-2}d(0, 0, 1, ...) + ... $$ 
 
 
-where
+where 
 
 $$ d_{1} = d(1,0,0,...)$$
 $$ d_{2} = d(0,1,0,...)$$
@@ -31,11 +31,11 @@ $$ d_{3} = d(0,0,1,...)$$
 
 or more compactly:
 
-$$ d_t = \sum_{k=0}^{+\infty} z_{t-k} d_{k} $$
+$$ d_t = \sum_{k=0}^{+\infty} z_{t-k} d_{k} $$ 
 
-The series of $d_{k}$ describes the trajectory of the economy after an "MIT" shock: the economy is hit by an aggregate shock in period 1 and then goes back directly to its steady-state value. The evolution of equilibrium variables are simply a moving average of past shocks.
+The series of $d_{k}$ describes the trajectory of the economy after an "MIT" shock: the economy is hit by an aggregate shock in period 1 and then goes back directly to its steady-state value. The evolution of equilibrium variables are simply a moving average of past shocks. 
 
-The BKM algorithm works well because computing an MIT shock in macroeconomic models with aggregate uncertainty and heterogeneous agents is generally feasible and fast.
+The BKM algorithm works well because computing an MIT shock in macroeconomic models with aggregate uncertainty and heterogeneous agents is generally feasible and fast. 
 
 #### TL;DR
 
@@ -44,7 +44,7 @@ To simulate out-of-steady-state dynamics, the BKM algorithm superposes **scaled 
 
 ### I. B. BKM example
 
-Let's illustrate how the BKM algorithm works with the following non-linear model:
+Let's illustrate how the BKM algorithm works with the following non-linear model: 
 
 $$ x_{t} = a x_{t-1} + b x_{t-1}^2 + z_{t} $$
 
@@ -74,8 +74,8 @@ function iter_x(x_min1::Float64, a::Float64, b::Float64)
     """
     Function to find the next iteration of x_{t} = a x_{t-1} + b x_{t-1}^2
     x_min1::Float64: x_{t-1}
-    a::Float64
-    b::Float64
+    a::Float64 
+    b::Float64 
     """
     return a*x_min1 + b*x_min1^2
 end
@@ -110,7 +110,7 @@ function BKM_path!(XT::Array{Float64,1}, x_scaled::Array{Float64,1}, shocks::Arr
     # get the length of x_scaled
     len_x_scaled = length(x_scaled)
     max_iter = length(XT)
-
+    
     # Loop over time periods periods
     for t=2:max_iter
         # Superposition of MIT shocks:
@@ -121,7 +121,7 @@ function BKM_path!(XT::Array{Float64,1}, x_scaled::Array{Float64,1}, shocks::Arr
             end
         end
     end
-
+    
 end
 
 XT = zeros(max_iter) # Initialization
@@ -180,7 +180,7 @@ array_sigma = collect(range(-2, stop=2, step=0.5))
 # Let's exclude sigma = 0
 array_sigma = array_sigma[array_sigma .!= 0.]
 # To store the different scaled IRF:
-x_mit_scaled_sigma = zeros(max_iter_mit, length(array_sigma))
+x_mit_scaled_sigma = zeros(max_iter_mit, length(array_sigma)) 
 
 for (index_sigma, sigma) in enumerate(array_sigma)
     x_mit=zeros(max_iter_mit)
@@ -197,7 +197,7 @@ for (index_sigma, sigma) in enumerate(array_sigma)
     x_mit_scaled = x_mit./z_t[1];
     # store the scaled response
     x_mit_scaled_sigma[:, index_sigma] = x_mit_scaled
-
+    
 end
 
 
@@ -220,7 +220,7 @@ p4
 
 
 
-The GenBKM algorithm is the similar to the BKM algorithm, except that the impacts of the size and the sign of the
+The GenBKM algorithm is the similar to the BKM algorithm, except that the impacts of the size and the sign of the 
 initial shock on the response of the economy are taken into consideration. It proceeds as follows:
 
 1. Divide the support of the shock into $n$ intervals $ I_i = (a_i, b_i)$
@@ -228,9 +228,9 @@ initial shock on the response of the economy are taken into consideration. It pr
 3. The state of the economy at time $t$ is given by the moving average of past shocks, taking into consideration
 past shock values:
 
-$$ d_t = \sum_{k=0}^{+\infty} z_{t-k} d_{k}^{f(t-k)} $$
+$$ d_t = \sum_{k=0}^{+\infty} z_{t-k} d_{k}^{f(t-k)} $$ 
 
-where the function $f(t)$ returns the index of the interval in which the shock $z_t$ falls.
+where the function $f(t)$ returns the index of the interval in which the shock $z_t$ falls. 
 
 #### TL;DR
 
@@ -243,20 +243,20 @@ The GenBKM algorithm is implemented in the block of code that follows. The next 
 
 ```julia
 function GenBKM_path!(XT::Array{Float64,1}, max_iter::Int64, x_scaled::Array{Float64,2}, shocks::Array{Float64,1}, array_sigma::Array{Float64,1})
-
+    
     # get the length of x_scaled
     len_x_scaled = size(x_scaled,1)
-
+    
     # We don't want x_scaled to contain any NaN value
     if sum(isnan.( x_scaled) .== true) != 0
         error("x_scaled contains at least one NaN value.")
     end
-
+    
     # We don't want shocks to contain any NaN value
     if sum(isnan.(shocks) .== true) != 0
         error("shocks contains at least one NaN value.")
     end
-
+    
     # Loop over time periods periods
     for t=2:max_iter
         # Superposition of MIT shocks:
@@ -269,7 +269,7 @@ function GenBKM_path!(XT::Array{Float64,1}, max_iter::Int64, x_scaled::Array{Flo
             end
         end
     end
-
+    
 end
 
 # Function to find the index corresponding to the closest value on a grid:
@@ -339,7 +339,7 @@ df
 
 ### Conclusion
 
-Heterogeneity along the business cycle matters. This blog post presented two simple algorithms that are both fast and accurate to solve for macroeconomics models in which heterogeneity is key. GenBKM is a refinement of BKM, which tends to be more accurate. However, there is no free lunch. The increased accuracy of GenBKM is obtained by using several MIT shocks instead of one.
+Heterogeneity along the business cycle matters. This blog post presented two simple algorithms that are both fast and accurate to solve for macroeconomics models in which heterogeneity is key. GenBKM is a refinement of BKM, which tends to be more accurate. However, there is no free lunch. The increased accuracy of GenBKM is obtained by using several MIT shocks instead of one. 
 
 ## References
 
@@ -364,3 +364,4 @@ versioninfo()
       WORD_SIZE: 64
       LIBM: libopenlibm
       LLVM: libLLVM-6.0.1 (ORCJIT, skylake)
+
