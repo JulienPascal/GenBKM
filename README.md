@@ -12,6 +12,10 @@ https://github.com/JulienPascal/GenBKM/blob/master/GenBKM.ipynb
 
 ![alt text](https://github.com/JulienPascal/GenBKM/blob/master/GenBKM_files/GenBKM_11_0.png)
 
+
+![alt text](https://github.com/JulienPascal/GenBKM/blob/master/GenBKM_files/GenBKM_14_1.png)
+
+
 ## References
 
 * Boppart, Timo, Per Krusell, and Kurt Mitman. "Exploiting MIT shocks in heterogeneous-agent economies: the impulse response as a numerical derivative." Journal of Economic Dynamics and Control 89 (2018): 68-92.
